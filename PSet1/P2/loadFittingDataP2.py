@@ -1,5 +1,7 @@
 import matplotlib.pyplot as plt
 import pylab as pl
+import numpy as np
+import pandas as pd 
 
 def getData(ifPlotData=True):
     # load the fitting data and (optionally) plot out for examination
@@ -17,3 +19,4 @@ def getData(ifPlotData=True):
         plt.show()
 
     return (X,Y)
+
