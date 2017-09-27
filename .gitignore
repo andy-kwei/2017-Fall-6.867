@@ -4,3 +4,7 @@
 *.fls
 *.log
 *.synctex.gz
+
+# python files
+__pycache__/
+*.pyc

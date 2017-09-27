@@ -1,7 +1,12 @@
+import sys
+sys.path.append('..')
+
 import matplotlib.pyplot as plt
 import pylab as pl
 import numpy as np
-import pandas as pd 
+import pandas as pd
+
+import P1.loadFittingDataP1 as P1 
 
 def getData(ifPlotData=True):
     # load the fitting data and (optionally) plot out for examination
@@ -21,6 +26,7 @@ def getData(ifPlotData=True):
     return (X,Y)
 
 def polynomial_basis(X, m):
+    # X is a 1D array
     matrix = np.empty((len(X), m+1))
     for i in range(len(X)):
         for j in range(m+1):
@@ -28,63 +34,59 @@ def polynomial_basis(X, m):
     return matrix
 
 def cosine_basis(X, m):
-    # including \phi_0 = 1
-    matrix = np.empty((len(X), m+1))
+    # X is a 1D array
+    matrix = np.empty((len(X), m))
     for i in range(len(X)):
-        for j in range(m+1):
-            matrix[i][j] = np.cos(X[i] * j * np.pi)
+        for j in range(m):
+            matrix[i][j] = np.cos(X[i] * (j+1) * np.pi)
     return matrix
 
-def beta_closed_form(X, Y):    
-    return (np.linalg.inv(X.T @ X) @ X.T @ Y)
+def eval_poly(X, coeffs):
+    coeffs_1D = coeffs.flatten()
+    X_1D = X.flatten()
+    Y = np.empty(shape=(len(X),))
+
+    for i in range(len(X)):
+        Y[i] = sum([coeffs_1D[n] * (X_1D[i] ** n) for n in range(len(coeffs_1D))])
+    return Y
+
+def eval_cos(X, coeffs):
+    coeffs_1D = coeffs.flatten()
+    X_1D = X.flatten()
+    Y = np.empty(shape=(len(X),))
+
+    for i in range(len(X)):
+        Y[i] = sum([coeffs_1D[j] * (np.cos(X_1D[i] * (j+1) * np.pi)) \
+                            for j in range(len(coeffs_1D))])
+    return Y
+
+def eval_actual(x):
+    return np.cos(np.pi * x) + np.cos(2 * np.pi * x)
+
+def beta_closed_form(X, Y):
+    # X, Y are 2D arrays
+    return (np.linalg.inv(X.T @ X) @ X.T @ Y.reshape(-1, 1))
 
 def sum_sq_err(X, Y, beta):
-    # returns float
-    X.shape = (X.shape[0], 1)
-    Y.shape = (Y.shape[0], 1)
-    sq_err = (Y - X @ beta)**2
-    return np.sum(sq_err)
+    return np.sum((np.reshape(Y, (-1, 1)) \
+        - X @ np.reshape(beta, (-1, 1)))**2)
 
 def SSE_gradient(X, Y, beta):
     # gradient = -2[X]^T[Y] + 2[X]^T[X][\beta]
     # returns 2D array
     return -2 * X.T @ Y + 2 * X.T @ X @ beta
 
-def eval_poly(X, coeffs):
-    coeffs.shape = (len(coeffs),)
-    x_vals = np.array(X)
-    x_vals.shape = (len(x_vals),)
-    y_vals = np.empty(shape=(len(x_vals),))
-
-    for i in range(len(x_vals)):
-        y_vals[i] = sum([coeffs[n] * (x_vals[i] ** n) for n in range(len(coeffs))])
-    return y_vals
-
-def eval_cos(X, coeffs):
-    coeffs.shape = (len(coeffs),)
-    x_vals = np.array(X)
-    x_vals.shape = (len(x_vals),)
-    y_vals = np.empty(shape=(len(x_vals),))
-
-    for i in range(len(x_vals)):
-        y_vals[i] = sum([coeffs[n] * (np.cos(x_vals[i] * n * np.pi)) \
-                            for n in range(len(coeffs))])
-    return y_vals
-
-def eval_actual(x):
-    return np.cos(np.pi * x) + np.cos(2 * np.pi * x)
-
 def part_one(save=True):
     plt.figure(1, figsize=(12, 3))
 
     X, Y = getData(False)
     M = [0,1,3,10]
-    solutions = []
+    solutions = {}
 
     for i, m in enumerate(M):
         X_poly = polynomial_basis(X, m)
         beta = beta_closed_form(X_poly, Y)
-        solutions.append((m, beta))
+        solutions[m] = beta
 
         x_values = np.linspace(0, 1, 100)
         y_values = eval_poly(x_values, beta)
@@ -121,17 +123,16 @@ def part_three():
     pass
 
 def part_four(save=True):
-    # note the cosine basis includes \phi_0 = 1
     plt.figure(4, figsize=(12,3))
 
     X, Y = getData(False)
     M = [1,2,4,8]
-    solutions = []
+    solutions = {}
 
     for i, m in enumerate(M):
         x_cos = cosine_basis(X, m)
         beta = beta_closed_form(x_cos, Y)
-        solutions.append((m, beta))
+        solutions[m] = beta
 
         x_values = np.linspace(0, 1, 100)
         y_values = eval_cos(x_values, beta)
