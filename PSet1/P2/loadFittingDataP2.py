@@ -314,7 +314,7 @@ def main():
     M = [3]
     t=1e-8
     # start=None
-    start=np.array([-2,10,-2,15]).reshape((-1,1))
+    start=np.array([-2,10,-2,10]).reshape((-1,1))
 
     # part_one(save=False)
 
