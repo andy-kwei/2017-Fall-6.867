@@ -114,20 +114,21 @@ def part_one(save=True, plot=True):
             x_values = np.linspace(0, 1, 100)
             y_values = eval_poly(x_values, beta)
             actual_y_values = eval_actual(x_values)
-            plt.figure(1, figsize=(6,6))
-            plt.subplot(2, 2, i+1)
+            
+            plt.figure(1, figsize=(3*len(M), 3))
+            plt.subplot(1, len(M), i+1)
             plt.plot(X, Y, 'ro', label='data')
             plt.plot(x_values, y_values, label='reg fit')
             plt.plot(x_values, actual_y_values, label='source')
             plt.axis([0,1,-3,3])
             plt.gca().set_aspect(0.17, adjustable='box')
             plt.title('Polynomial Fit (M = '+str(m)+')')
-            plt.subplots_adjust(left=0.05, right=0.95, top=0.95, bottom=0.05)
+            # plt.subplots_adjust(left=0.05, right=0.95, top=0.95, bottom=0.05)
 
             if i == 0:
                 plt.legend()
 
-    if save:
+    if plot and save:
         plt.savefig('fig/part_1.png')
 
     return solutions
@@ -147,21 +148,21 @@ def part_two():
 
     return closed_form_grad, np.array(numerical_grad)
 
-def part_three_bgd(eta=0.01, threshold=1e-7, start=None, \
-                    save=True, plot=True):
+def part_three_bgd(eta=1e-2, threshold=1e-8, start=None, M=[0,1,3,10], \
+                param=None, save=True, plot=True, plot_source=True):
     # bgd 
+    # param = None, 'eta', 'epsilon'
     X, Y = getData(False)
     X = X.reshape(-1, 1)
     Y = Y.reshape(-1, 1)
 
-    M = [0,1,3,10]
     solutions = {}
     for i, m in enumerate(M):
         X_poly = polynomial_basis(X, m)
         obj = get_obj_func(X_poly, Y)
         bgd = get_batch_grad_func(X_poly, Y)
 
-        if start == None:
+        if start is None:
             seed = np.zeros((X_poly.shape[1], 1))
         else:
             seed = start
@@ -176,39 +177,42 @@ def part_three_bgd(eta=0.01, threshold=1e-7, start=None, \
             y_values = eval_poly(x_values, beta)
             actual_y_values = eval_actual(x_values)
 
-            plt.figure(2, figsize=(6,6))
-            plt.subplot(2, 2, i+1)
-            plt.plot(X, Y, 'ro', label='data')
-            plt.plot(x_values, y_values, label='bgd fit')
-            plt.plot(x_values, actual_y_values, label='source')
+            plt.figure(2, figsize=(3*len(M), 3))
+            plt.subplot(1, len(M), i+1)
+
+            if plot_source:
+                plt.plot(X, Y, 'ro', label='data')
+                plt.plot(x_values, actual_y_values, label='source')
+
+            plt.plot(x_values, y_values, label='bgd (η='+str(eta)+')')
             plt.axis([0,1,-3,3])
             plt.gca().set_aspect(0.17, adjustable='box')
             plt.title('Batch GD (M = '+str(m)+')')
-            plt.subplots_adjust(left=0.05, right=0.95, top=0.95, bottom=0.05)
+            plt.tight_layout()
+            # plt.subplots_adjust(left=0.05, right=0.95, top=0.95, bottom=0.05)
 
             if i == 0:
                 plt.legend()
 
-    if save:
+    if plot and save:
         plt.savefig('fig/part_3_bgd.png')
 
     return solutions
 
-def part_three_sgd(eta=0.01, threshold=1e-7, start=None, \
-                    save=True, plot=True):
+def part_three_sgd(eta=1e-2, threshold=1e-8, start=None, M = [0,1,3,10],\
+                    save=True, plot=True, plot_source=True):
     # sgd 
     X, Y = getData(False)
     X = X.reshape(-1, 1)
     Y = Y.reshape(-1, 1)
 
-    M = [0,1,3,10]
     solutions = {}
     for i, m in enumerate(M):
         X_poly = polynomial_basis(X, m)
         obj = get_obj_func(X_poly, Y)
         sgd = get_sgd_grad_func(X_poly, Y)
 
-        if start == None:
+        if start is None:
             seed = np.zeros((X_poly.shape[1], 1))
         else:
             seed = start
@@ -223,20 +227,24 @@ def part_three_sgd(eta=0.01, threshold=1e-7, start=None, \
             y_values = eval_poly(x_values, beta)
             actual_y_values = eval_actual(x_values)
 
-            plt.figure(3, figsize=(6,6))
-            plt.subplot(2, 2, i+1)
-            plt.plot(X, Y, 'ro', label='data')
-            plt.plot(x_values, y_values, label='sgd fit')
-            plt.plot(x_values, actual_y_values, label='source')
+            plt.figure(3, figsize=(3*len(M), 3))
+            plt.subplot(1, len(M), i+1)
+
+            if plot_source:
+                plt.plot(X, Y, 'ro', label='data')
+                plt.plot(x_values, actual_y_values, label='source')
+
+            plt.plot(x_values, y_values, label='sgd (η='+str(eta)+')')
             plt.axis([0,1,-3,3])
             plt.gca().set_aspect(0.17, adjustable='box')
             plt.title('Stochastic GD (M = '+str(m)+')')
-            plt.subplots_adjust(left=0.05, right=0.95, top=0.95, bottom=0.05)
+            plt.tight_layout()
+            # plt.subplots_adjust(left=0.05, right=0.95, top=0.95, bottom=0.05)
 
             if i == 0:
                 plt.legend()
 
-    if save:
+    if plot and save:
         plt.savefig('fig/part_3_sgd.png')
 
     return solutions
@@ -260,33 +268,36 @@ def part_four(save=True, plot=True):
             y_values = eval_cos(x_values, beta)
             actual_y_values = eval_actual(x_values)
 
-            plt.figure(4, figsize=(6,6))
-            plt.subplot(2, 2, i+1)
+            plt.figure(4, figsize=(3 * len(M), 3))
+            plt.subplot(1, len(M), i+1)
             plt.plot(X, Y, 'ro', label='data')
             plt.plot(x_values, y_values, label='reg fit')
             plt.plot(x_values, actual_y_values, label='source')
             plt.axis([0,1,-3,3])
             plt.gca().set_aspect(0.17, adjustable='box')
             plt.title('Cosine Basis (M = '+str(m)+')')
-            plt.subplots_adjust(left=0.05, right=0.95, top=0.95, bottom=0.05)
+            plt.tight_layout()
+            # plt.subplots_adjust(left=0.05, right=0.95, top=0.95, bottom=0.05)
 
             if i == 0:
                 plt.legend()
 
-    if save:
+    if plot and save:
         plt.savefig('fig/part_4.png')
 
     return solutions
 
-def generate_results(show_plot=False, write_to_file=False):
+def generate_results(write_to_file=False, 
+                    save=[True, True, True],
+                    plot=[True,True,True]):
     try:
         if write_to_file:
             sys.stdout = open('results.txt', 'w')
 
-        part_1 = part_one(save=False, plot=False)
+        part_1 = part_one(save[0], plot[0])
         part_2 = part_two()
-        part_3 = part_three(save=False, plot=True)
-        part_4 = part_four(save=False, plot=False)
+        part_3 = part_three(save[1], plot[1])
+        part_4 = part_four(save[2], plot[2])
 
         print('Part 1: Coefficients to polynomial basis regression:\n{}\n'.format(
             part_1))
@@ -298,14 +309,32 @@ def generate_results(show_plot=False, write_to_file=False):
     finally:
         sys.stdout.close()
 
-    if show_plot:
-        plt.show()
-
 def main():
-    part_three_bgd()
-    part_three_sgd()
+    X, Y = getData(False)
+    M = [3]
+    t=1e-8
+    # start=None
+    start=np.array([-2,10,-2,15]).reshape((-1,1))
+
+    # part_one(save=False)
+
+    part_three_bgd(eta=1e-4, start=start, M=M, threshold=t, plot_source=True)
+    part_three_bgd(eta=1e-3, start=start, M=M, threshold=t, plot_source=False)
+    part_three_bgd(eta=0.01, start=start, M=M, threshold=t, plot_source=False)
+    part_three_bgd(eta=0.05, start=start, M=M, threshold=t, plot_source=False)
+
+    part_three_sgd(eta=0.001, start=start, M=M, threshold=t, plot_source=True)
+    part_three_sgd(eta=0.01, start=start, M=M, threshold=t, plot_source=False)
+    part_three_sgd(eta=0.1, start=start, M=M, threshold=t, plot_source=False)
+    part_three_sgd(eta=0.3, start=start, M=M, threshold=t, plot_source=False)
+
+    plt.figure(2).savefig('fig/part_3_bgd_etas.png')
+    plt.figure(3).savefig('fig/part_3_sgd_etas.png')
+
+    # part_four(save=False, plot=True)
+    # generate_results()
     plt.show()
-    # generate_results(show_plot=True, write_to_file=False)
+
 
 if __name__ == '__main__':
     main()

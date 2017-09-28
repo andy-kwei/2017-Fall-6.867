@@ -49,6 +49,13 @@ We ran regressions on the data using a few different degrees $(M = 0, 1, 3, 10)$
 
 \subsection{Gradient Descent Solution with Polynomial Basis}
 % Minimize SSE with Batch GD and SGD
+% smallers thresholds produces slightly better fits when learn rate is small
+% any threshold smaller than 1e-6 has similar results for learn rates we tested
+% sgd is more sensitive to start point compared to bgd
+% learn rate can't be too high or too low: doesn't converge when learn rate is too high, converges immediately when learn rate is too low (and when threshold is not adjusted accordingly)
+% sgd is much more sensitive to learn rate as well
+% stucks in local minima when degree is high -> more local minima
+
 
 \subsection{Closed-form Solution with Cosine Function Basis}
 
