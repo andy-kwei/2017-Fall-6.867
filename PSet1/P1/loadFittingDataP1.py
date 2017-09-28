@@ -59,16 +59,33 @@ if __name__ == '__main__':
 
     # print(value(start))
     
-    rateFun = lambda iterations: 1e-4 * iterations ** -0.75
+    ## PLOTS
+    
+    rateFun = lambda iterations: 1e-4 *(1+ iterations) ** -0.75
     steps = []
     gradFun = batchGrad
-    convergence_specs = (value,1e-5,"objective")
+    convergence_specs = (value,1e-10,"objective")
     a = lp1.gradientDescent(gradFun, start, rateFun, convergence_specs, steps)
-    plt.title("Stochastic gradient descent")
+    plt.title("Batch Gradient Descent")
     plt.xlabel("Iterations")
-    plt.ylabel("Log of gradient norm")
+    plt.ylabel("Difference from Goal Objective Function")
     # print(steps[0])
     # print(a)
     # print('err here')
-    plt.plot([x for x, y,z in steps], [log(np.linalg.norm(gradFun(y))) for x, y,z in steps])
+    plt.plot([x for x, y,z in steps], [abs(z) for x, y,z in steps])
+    plt.show()
+    
+    rateFun = lambda iterations: 1e-7 *(1+ iterations) ** -0.75
+    steps = []
+    gradFun = stochGrad
+    convergence_specs = (value,5e-6,"objective")
+    a = lp1.gradientDescent(gradFun, start, rateFun, convergence_specs, steps)
+    plt.title("Stochastic Gradient Descent")
+    plt.xlabel("Iterations")
+    plt.ylabel("Difference from Goal Objective Function")
+    # print(steps[0])
+    # print(a)
+    # print('err here')
+    plt.plot([x for x, y,z in steps], [abs(z) for x, y,z in steps])
+    #plt.plot([x for x, y,z in steps], [log(np.linalg.norm(gradFun(y))) for x, y,z in steps])
     plt.show()

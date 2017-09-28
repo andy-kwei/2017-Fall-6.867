@@ -35,7 +35,7 @@ def gradientDescent(gradient_fun, start, learn_rate, convergence_specs, step_pat
     current = start
     prev = None
     iterations = 0
-    maxIters = 10000
+    maxIters = 20000
     (calcFunction, threshold, convergence_criteria) = convergence_specs
     while prev is None or ( iterations < maxIters):
         converged_yet = False
@@ -113,26 +113,208 @@ if __name__ == '__main__':
     
     
     #function, threshold, obj vs. norm
-    convergence_specs = (gauss,1e-10,"objective")
-    
-    
-    
-    
     start = np.mat([[0.], [0.]])
-    step_size = .1
+    step_size = .01
+    
+    #### PLOTS HERE ####
+
+    
+    #Central Differences, Gauss
+    numStepSizes = 4
+    stepSizes = [10**-i for i in range(numStepSizes)]
+    numDists = 20
+    gradErrs = np.zeros((numStepSizes,numDists),dtype = np.matrix)
+    for dist in range(1,numDists):
+        start = np.mat([[10.], [10.-dist]])
+        truthGrad=gaussGrad(start)
+        for i in range(numStepSizes):
+            approxFn = centralDifferences(gauss,stepSizes[i])
+            gradErrs[i][dist] = np.linalg.norm(approxFn(start) - truthGrad)
+    
+    for i in range(numStepSizes):
+        plt.plot(range(numDists),gradErrs[i],label='-log(Step Size) = '+str(i))
+    plt.legend()
+    plt.xlabel('Distance from Critical Point')
+    plt.ylabel('Norm of Difference From True Gradient')
+    plt.title('Central Difference Gradient Analysis (Gaussian)')
+    plt.show()
+    
+    
+    #Central Differences, Bowl
+    numStepSizes = 4
+    stepSizes = [10**-i for i in range(numStepSizes)]
+    numDists = 20
+    gradErrs = np.zeros((numStepSizes,numDists),dtype = np.matrix)
+    for dist in range(1,numDists):
+        start = np.mat([[40/3.-dist], [20/3.-dist/10]])
+        truthGrad=bowlGrad(start)
+        for i in range(numStepSizes):
+            approxFn = centralDifferences(bowl,stepSizes[i])
+            gradErrs[i][dist] = np.linalg.norm(approxFn(start) - truthGrad)
+    
+    for i in range(numStepSizes):
+        plt.plot(range(numDists),gradErrs[i],label='-log(Step Size) = '+str(i))
+    plt.legend()
+    plt.xlabel('Distance from Critical Point')
+    plt.ylabel('Norm of Difference From True Gradient')
+    axes = plt.gca()
+    axes.set_ylim([-0.01,0.11])
+    plt.title('Central Difference Gradient Analysis (Bowl)')
+    plt.show()
+    
+    #Norm of Gradient, Gauss
+    convergence_specs = (gauss,1e-10,"objective")
+    start = np.mat([[10], [10-10]])
+    step_size = .01
     steps = []
     result = gradientDescent(gaussGrad, start, step_size, convergence_specs, steps)
+    
+    plt.plot(range(len(steps)),[i[2] for i in steps])
+    plt.xlabel("Steps")
+    plt.ylabel("Gradient Norm")
+    plt.title("Progression of Gradient Norm (Gaussian)")
+    plt.show()
+    
+    #Norm of Gradient, bowl
+    convergence_specs = (bowl,1e-10,"objective")
+    start = np.mat([[10], [10-10]])
+    step_size = .01
+    steps = []
+    result = gradientDescent(bowlGrad, start, step_size, convergence_specs, steps)
+    
+    plt.plot(range(len(steps)-1),[i[2] for i in steps[1:]])
+    plt.xlabel("Steps")
+    plt.ylabel("Gradient Norm")
+    plt.title("Progression of Gradient Norm (Bowl)")
+    plt.show()
+    
+    
+
+    #Distance from critical point, Gaussian
+    convergence_specs = (gauss,1e-10,"objective")
+    numDists = 13
+    stepsToConvergence = [0]*numDists
+    for i in range(numDists):
+        start = np.mat([[10.], [10.-i]])
+        steps = []
+        result = gradientDescent(gaussGrad, start, step_size, convergence_specs, steps)
+        stepsToConvergence[i] = len(steps)
+    
+    plt.scatter([i+1 for i in range(numDists-1)],stepsToConvergence[1:])
+    plt.xlabel("Starting Distance From Critical Point")
+    plt.ylabel("Number of Descent Steps to Convergence")
+    plt.title("Varying Starting Point (Gaussian)")
+    plt.show()
+    
+    #Distance from critical point, Bowl
+    convergence_specs = (bowl,1e-10,"objective")
+    numDists = 30
+    stepsToConvergence = [0]*numDists
+    for i in range(numDists):
+        start = np.mat([[40./3], [40./3.-i]])
+        steps = []
+        result = gradientDescent(bowlGrad, start, step_size, convergence_specs, steps)
+        stepsToConvergence[i] = len(steps)
+    
+    plt.scatter([i+1 for i in range(numDists-1)],stepsToConvergence[1:])
+    plt.xlabel("Starting Distance From Critical Point")
+    plt.ylabel("Number of Descent Steps to Convergence")
+    plt.title("Varying Starting Point (Bowl)")
+    plt.show()
+    
+    #Stepsize, Gauss
+    convergence_specs = (gauss,1e-10,"objective")
+    numSteps = 5
+    stepsToConvergence = [0]*numSteps
+    start = np.mat([[10], [10-10]])
+    stepSizes = [(i)/2+1. for i in range(numSteps)]
+    for i in range(numSteps):
+        step_size = 10**(-stepSizes[i])
+        steps = []
+        result = gradientDescent(gaussGrad, start, step_size, convergence_specs, steps)
+        stepsToConvergence[i] = len(steps)
+    
+    plt.scatter(stepSizes,stepsToConvergence)
+    plt.xlabel("-log(Step Size)")
+    plt.ylabel("Number of Descent Steps to Convergence")
+    plt.title("Varying Step Size (Gaussian)")
+    plt.show()
+    
+    #Stepsize, Bowl
+    convergence_specs = (bowl,1e-10,"objective")
+    numSteps = 5
+    stepsToConvergence = [0]*numSteps
+    start = np.mat([[40./3], [40./3-10]])
+    stepSizes = [(i)/2+1. for i in range(numSteps)]
+    for i in range(numSteps):
+        step_size = 10**(-stepSizes[i])
+        steps = []
+        result = gradientDescent(bowlGrad, start, step_size, convergence_specs, steps)
+        stepsToConvergence[i] = len(steps)
+    
+    plt.scatter(stepSizes,stepsToConvergence)
+    plt.xlabel("-log(Step Size)")
+    plt.ylabel("Number of Descent Steps to Convergence")
+    plt.title("Varying Step Size (Bowl)")
+    plt.show()
+    
+    
+    
+    #Convergence Criteria, Gauss
+    convergence_specs = (gauss,1e-10,"objective")
+    numSteps = 10
+    stepsToConvergence = [0]*numSteps
+    start = np.mat([[10], [10-10]])
+    step_size = .01
+    convergences = [10**-i for i in range(numSteps)]
+    for i in range(numSteps):
+        convergence_specs = (gauss,convergences[i],"objective")
+        steps = []
+        result = gradientDescent(gaussGrad, start, step_size, convergence_specs, steps)
+        stepsToConvergence[i] = len(steps)
+    
+    plt.scatter(range(numSteps),stepsToConvergence)
+    plt.xlabel("-log(Convergence Threshold)")
+    plt.ylabel("Number of Descent Steps to Convergence")
+    plt.title("Varying Convergence Threshold (Gaussian)")
+    plt.show()
+    
+    #Convergence Criteria, Bowl
+    convergence_specs = (bowl,1e-10,"objective")
+    numSteps = 10
+    stepsToConvergence = [0]*numSteps
+    start = np.mat([[40./3], [40./3-10]])
+    step_size = .01
+    convergences = [10**-i for i in range(numSteps)]
+    for i in range(numSteps):
+        convergence_specs = (bowl,convergences[i],"objective")
+        steps = []
+        result = gradientDescent(bowlGrad, start, step_size, convergence_specs, steps)
+        stepsToConvergence[i] = len(steps)
+    
+    plt.scatter(range(numSteps),stepsToConvergence)
+    plt.xlabel("-log(Convergence Threshold)")
+    plt.ylabel("Number of Descent Steps to Convergence")
+    plt.title("Varying Convergence Threshold (Bowl)")
+    plt.show()
+    
+    
+    
+    
+    
+    
+        
     #print(result[0],result[1])
     #plt.plot(float(result[0]), float(result[1]), 'bo')
-    for i in range(len(steps)):
-        
-        if i%100 == 0:
-            print(steps[i][2])
-            plt.plot(i,steps[i][2],'bo')
-            xx = steps[i][1]
-            #plt.plot(xx[0],xx[1],'rx')
-            
-    print('err ends')
+#     for i in range(len(steps)):
+#         
+#         if i%100 == 0:
+#             #print(steps[i][2])
+#             plt.plot(i,steps[i][2],'bo')
+#             xx = steps[i][1]
+#             #plt.plot(xx[0],xx[1],'rx')
+#             
+#     print('err ends')
         
     #plt.show()
     #print(steps)
@@ -146,12 +328,12 @@ if __name__ == '__main__':
 
     #print([gaussGrad(i/10) for i in range(10)])
     
-    for i in range(10):
-        stepSize = 10**-i
-        approxGaussGrad = centralDifferences(gauss, stepSize)
-        start_point = np.mat((8.,9.)).T
-        #print(approxGaussGrad(start_point))
-        print(stepSize, np.linalg.norm(gaussGrad(start_point) - approxGaussGrad(start_point)))
+#     for i in range(10):
+#         stepSize = 10**-i
+#         approxGaussGrad = centralDifferences(gauss, stepSize)
+#         start_point = np.mat((8.,9.)).T
+#         #print(approxGaussGrad(start_point))
+#         print(stepSize, np.linalg.norm(gaussGrad(start_point) - approxGaussGrad(start_point)))
     
     
 # (gMean,gCov,qA,qb) = getData()
