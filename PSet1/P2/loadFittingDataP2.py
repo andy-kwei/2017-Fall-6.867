@@ -129,7 +129,7 @@ def part_one(save=True, plot=True):
                 plt.legend()
 
     if plot and save:
-        plt.savefig('fig/part_1.png')
+        plt.savefig('figs/part_1.png')
 
     return solutions
 
@@ -195,7 +195,7 @@ def part_three_bgd(eta=1e-2, threshold=1e-8, start=None, M=[0,1,3,10], \
                 plt.legend()
 
     if plot and save:
-        plt.savefig('fig/part_3_bgd.png')
+        plt.savefig('figs/part_3_bgd.png')
 
     return solutions
 
@@ -245,7 +245,7 @@ def part_three_sgd(eta=1e-2, threshold=1e-8, start=None, M = [0,1,3,10],\
                 plt.legend()
 
     if plot and save:
-        plt.savefig('fig/part_3_sgd.png')
+        plt.savefig('figs/part_3_sgd.png')
 
     return solutions
 
@@ -283,7 +283,7 @@ def part_four(save=True, plot=True):
                 plt.legend()
 
     if plot and save:
-        plt.savefig('fig/part_4.png')
+        plt.savefig('figs/part_4.png')
 
     return solutions
 
@@ -316,8 +316,6 @@ def main():
     # start=None
     start=np.array([-2,10,-2,10]).reshape((-1,1))
 
-    # part_one(save=False)
-
     part_three_bgd(eta=1e-4, start=start, M=M, threshold=t, plot_source=True)
     part_three_bgd(eta=1e-3, start=start, M=M, threshold=t, plot_source=False)
     part_three_bgd(eta=0.01, start=start, M=M, threshold=t, plot_source=False)
@@ -328,10 +326,9 @@ def main():
     part_three_sgd(eta=0.1, start=start, M=M, threshold=t, plot_source=False)
     part_three_sgd(eta=0.3, start=start, M=M, threshold=t, plot_source=False)
 
-    plt.figure(2).savefig('fig/part_3_bgd_etas.png')
-    plt.figure(3).savefig('fig/part_3_sgd_etas.png')
+    plt.figure(2).savefig('figs/part_3_bgd_etas.png')
+    plt.figure(3).savefig('figs/part_3_sgd_etas.png')
 
-    # part_four(save=False, plot=True)
     # generate_results()
     plt.show()
 
