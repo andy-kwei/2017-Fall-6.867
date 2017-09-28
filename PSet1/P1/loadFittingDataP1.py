@@ -1,5 +1,5 @@
 import pylab as pl
-import P1.loadParametersP1 as lp1
+import loadParametersP1 as lp1
 import numpy as np
 import matplotlib.pyplot as plt
 from math import *
@@ -31,7 +31,7 @@ def makeStochGrad(xs, ys):
 
 def makeValue(X, y):
     def value(theta):
-        return np.linalg.norm(X * theta - y)
+        return np.linalg.norm(X * theta - y)**2
     return value
 
 def getData():
@@ -49,7 +49,6 @@ if __name__ == '__main__':
     X, y = getData()
     xs = np.mat(X)
     ys = y
-    
     start = np.ones((10, 1))
 
     batchGrad = makeBatchGrad(xs, ys)
@@ -59,16 +58,17 @@ if __name__ == '__main__':
 
     # print(value(start))
     
-    rateFun = lambda iterations: 1e-4 * iterations ** -0.75
+    rateFun = lambda iterations: ((1 + iterations) ** -0.8)*10**(-10)
     steps = []
     gradFun = stochGrad
     convergence_specs = (value,1e-5,"objective")
     a = lp1.gradientDescent(gradFun, start, rateFun, convergence_specs, steps)
     plt.title("Stochastic gradient descent")
     plt.xlabel("Iterations")
-    plt.ylabel("Log of gradient norm")
+    plt.ylabel("Log of error")
     print(steps[0])
     print(a)
     print('err here')
-    plt.plot([x for x, y,z in steps], [log(np.linalg.norm(gradFun(y))) for x, y,z in steps])
+    #plt.plot([x for x, y,z in steps], [log(np.linalg.norm(gradFun(y))) for x, y,z in steps])
+    plt.plot([x for x, y,z in steps[1:]], [log(abs(z)) for x, y,z in steps[1:]])
     plt.show()

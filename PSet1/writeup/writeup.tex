@@ -19,6 +19,7 @@
 \newcommand{\E}{{\mathbb E}}
 \mathchardef\hyphen="2D
 
+
 \title{6.867 Homework 1}
 \author{Anonymous Authors}
 
@@ -29,13 +30,57 @@
 
 \section{Implementing Gradient Descent}
 
+In any gradient descent algorithm, the main hyperparameters we have to tune are the initial point we start the gradient descent from, the step size, and the convergence criteria. 
+
+\begin{itemize}
+
+\item An incorrect initial guess could lead to getting stuck at a local min without ever reaching the global minumum
+\item A step size that is too large can shoot past the minumum or go back and forth without ever reaching the critical point. Conversely, a step size that is too small can make the algorithm take far too long to converge.
+\item A convergence criteria that is too lax can result in a sub-optimal stopping point, while a convergence criteria that is too strict can result in the algorithm taking too long.
+
+\end{itemize}
+
+For each of the three parameters, we can see how varying the parameters changes the gradient descent for both of the provided functions (the Gaussian and the bowl).
+
+Default parameters are: 
+
+\begin{itemize}
+
+\item Starting Point: (0,0)
+\item Step Size: 0.01
+\item Convergence Criteria: Difference between consecutive objective function values is less than $10^{-10}$, max of 20,000 iterations
+
+\end{itemize}
+
+\begin{center}
+ \begin{tabular}{||c c c c||} 
+\hline
+ \multicolumn{4}{|c|}{Varying Starting Point for Gaussian} \\
+ \hline
+ Starting Point & Distance from Critical Point  & Number of Steps to Convergence \\ [0.5ex] 
+ \hline\hline
+ 1 & 6 & 87837 & 787 \\ 
+ \hline
+ 2 & 7 & 78 & 5415 \\
+ \hline
+ 3 & 545 & 778 & 7507 \\
+ \hline
+ 4 & 545 & 18744 & 7560 \\
+ \hline
+ 5 & 88 & 788 & 6344 \\ [1ex] 
+ \hline
+\end{tabular}
+\end{center}
+
+
+
+
 \section{Linear Basis Function Regression}
 
 \subsection{Closed-form Solution with Polynomial Basis}
-% Replicate plots
 
 \subsection{Gradient Descent Solution with Polynomial Basis}
-% Minimize SSE with Batch GD and SGD
+% Batch GD and SGD
 
 \subsection{Closed-form Solution with Cosine Function Basis}
 
