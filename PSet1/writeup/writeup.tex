@@ -35,61 +35,58 @@
 
 
 In any gradient descent algorithm, the main hyperparameters we have to tune are the initial point we start the gradient descent from, the step size, and the convergence criteria. 
-
-\begin{itemize}
-
-\item An incorrect initial guess could lead to getting stuck at a local min without ever reaching the global minumum
-\item A step size that is too large can shoot past the minumum or go back and forth without ever reaching the critical point. Conversely, a step size that is too small can make the algorithm take far too long to converge.
-\item A convergence criteria that is too lax can result in a sub-optimal stopping point, while a convergence criteria that is too strict can result in the algorithm taking too long.
-
-\end{itemize}
+%
+%\begin{itemize}
+%
+%\item An incorrect initial guess could lead to getting stuck at a local min without ever reaching the global minumum
+%\item A step size that is too large can shoot past the minumum or go back and forth without ever reaching the critical point. Conversely, a step size that is too small can make the algorithm take far too long to converge.
+%\item A convergence criteria that is too lax can result in a sub-optimal stopping point, while a convergence criteria that is too strict can result in the algorithm taking too long.
+%
+%\end{itemize}
 
 For each of the three parameters, we can see how varying the parameters changes the gradient descent for both of the provided functions (the Gaussian and the bowl).
 
-Default parameters are: 
-
-\begin{itemize}
-
-\item Starting Point: (0,0)
-\item Step Size: 0.01
-\item Convergence Criteria: Difference between consecutive objective function values is less than $10^{-10}$, max of 20,000 iterations
-\end{itemize}
+Unless otherwise specified, default parameters are: starting point @ (0,0), step size of 0.01, and convergence criteria of difference between consecutive objective function values is less than $10^{-10}$.
 
 \begin{figure}[H]
-        \begin{subfigure}[b]{0.5\textwidth}
+\centering
+        \begin{subfigure}[b]{0.4\textwidth}
                 \includegraphics[width=\linewidth]{../P1/figs/start_gauss.png}
         \end{subfigure}%
-        \begin{subfigure}[b]{0.5\textwidth}
+        \begin{subfigure}[b]{0.4\textwidth}
                 \includegraphics[width=\linewidth]{../P1/figs/start_bowl.png}
         \end{subfigure}%
 	\caption*{The number of steps needed for convergence grows much faster in the Gaussian than it does with the bowl. This is because the gradient decays exponentially in the Gaussian case with respect to distance from the critical point but linearly in the bowl case.}
 \end{figure}
 
 \begin{figure}[H]
-        \begin{subfigure}[b]{0.5\textwidth}
+\centering
+        \begin{subfigure}[b]{0.4\textwidth}
                 \includegraphics[width=\linewidth]{../P1/figs/step_gauss.png}
         \end{subfigure}%
-        \begin{subfigure}[b]{0.5\textwidth}
+        \begin{subfigure}[b]{0.4\textwidth}
                 \includegraphics[width=\linewidth]{../P1/figs/step_bowl.png}
         \end{subfigure}%
 \caption*{In both cases, step size eventually grows linearly with the number of steps needed until convergence. However, in some cases where the step size is extremely large (not shown), the function may not converge at all.}
 \end{figure}
 
 \begin{figure}[H]
-        \begin{subfigure}[b]{0.5\textwidth}
+\centering
+        \begin{subfigure}[b]{0.4\textwidth}
                 \includegraphics[width=\linewidth]{../P1/figs/converge_gauss.png}
         \end{subfigure}%
-        \begin{subfigure}[b]{0.5\textwidth}
+        \begin{subfigure}[b]{0.4\textwidth}
                 \includegraphics[width=\linewidth]{../P1/figs/converge_bowl.png}
         \end{subfigure}%
-\caption*{Here, as the convergence threshold grows, so to does the number of steps needed to converge.}
+\caption*{Here, as the convergence threshold grows, so to does the number of steps needed to converge. Intuitively, this makes sense--the more accurate the gradient descent needs to be, the more iterations we need to converge.}
 \end{figure}
 
 \begin{figure}[H]
-        \begin{subfigure}[b]{0.5\textwidth}
+\centering
+        \begin{subfigure}[b]{0.4\textwidth}
                 \includegraphics[width=\linewidth]{../P1/figs/grad_norm_gauss.png}
         \end{subfigure}%
-        \begin{subfigure}[b]{0.5\textwidth}
+        \begin{subfigure}[b]{0.4\textwidth}
                 \includegraphics[width=\linewidth]{../P1/figs/grad_norm_bowl.png}
         \end{subfigure}%
 \caption*{As mentioned before, the gradient norm of the Gaussian starts off very small when the starting point is far away from the critical point. Around step 1000, it starts to reach the steep part of the Gaussian, at which point it quickly reaches convergence. For the bowl, the gradient norm starts off high and quickly decreases and converges.}
@@ -98,22 +95,24 @@ Default parameters are:
 To perform gradient descent on functions that do not have a clean, closed-form gradient, we can approximate the gradient using central differences. Here, we analyze how the performance of the central differences approximation varies based on the step size used for the difference approximation.
 
 \begin{figure}[H]
-        \begin{subfigure}[b]{0.5\textwidth}
+\centering
+        \begin{subfigure}[b]{0.4\textwidth}
                 \includegraphics[width=\linewidth]{../P1/figs/central_diff_gauss.png}
         \end{subfigure}%
-        \begin{subfigure}[b]{0.5\textwidth}
+        \begin{subfigure}[b]{0.4\textwidth}
                 \includegraphics[width=\linewidth]{../P1/figs/central_diff_bowl.png}
         \end{subfigure}%
-\caption*{When the step size is large, we see some errors in the approximate gradient norm. However, once we reach step sizes of $10^{-2}$ or smaller, the errors vanish. For the bowl, we have no error in our gradient approximation regardless of step size because the gradient of the bowl is linear. Thus, approximating the gradient of the bowl with the average of two points gives us the exact gradient.}
+\caption*{When the step size is larger than $10^{-2}$, we start to see errors in the Gaussian. For the bowl, we have no error in our gradient approximation regardless of step size because the gradient of the bowl is linear; because of this, our averaging approximation acutally gives us the exact answer. }
 \end{figure}
 
 Often, when running gradient descent, it is computationally expensive to calculate the total error. We can use Stochastic Gradient Descent as an alternative: each time we calculate the least square error, we only use one sample to calculate the error. This results in a much faster overall computation at the expense of some accuracy. We can compare the two algorithms by calculating the gradient descent of the least square error with similar convergence criteria.
 
 \begin{figure}[H]
-        \begin{subfigure}[b]{0.5\textwidth}
+\centering
+        \begin{subfigure}[b]{0.4\textwidth}
                 \includegraphics[width=\linewidth]{../P1/figs/plot_batch.png}
         \end{subfigure}%
-        \begin{subfigure}[b]{0.5\textwidth}
+        \begin{subfigure}[b]{0.4\textwidth}
                 \includegraphics[width=\linewidth]{../P1/figs/plot_sgd.png}
         \end{subfigure}%
 \caption*{It takes many more iterations for SGD to converge than batch descent. Furthermore, batch descent can converge on a more accurate answer (due to the randomness of SGD throwing things off). However, SGD runs much faster, even while taking more iterations. In practice, mini-batch SGD is often used as the best of both worlds.}
@@ -143,6 +142,127 @@ We ran regressions on the data using a few different degrees $(M = 0, 1, 3, 10)$
 \subsection{Closed-form Solution with Cosine Function Basis}
 
 \section{Ridge Regression}
+
+We first run ridge regression on the polynomial basis data set from the previous problem. Given that we are trying to minimize the squared error  $\vert \vert X\theta - y\vert \vert ^2 + \lambda \vert \vert \theta \vert \vert ^2$, the closed form solution gives us:
+
+\[  \theta = (X^{T}X + \lambda I)^{-1} X^{T} y \]
+
+We plot the MSE for different dimensionality models for different values of $\lambda$.
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width = 3.15in]{../P3/figs/poly_basis.png}
+  \caption*{For $\lambda = 0$, increasing the dimensionality slowly improves the MSE. However, as $\lambda$ grows, the benefit shrinks because the regularization term punishes large terms in $\theta$.}
+\end{figure}
+
+We then run our ridge regression on the provided datasets. For each value of $\lambda$, we run ridge regression for different values of M and pick the model with the best validation error. We then run that model on the test set and compute the MSE.
+
+
+\begin{center}
+ \begin{tabular}{||c c c c||} 
+ \hline
+ \multicolumn{4}{|c|}{Train on A, Test on B} \\
+ \hline
+ \hline
+ $\lambda$ & Optimal M & Validation MSE & Test MSE\\ [0.5ex] 
+ \hline\hline
+ 0 & 2 & 0.107 & 2.575 \\ 
+ \hline
+ 0.5 & 2 & 0.126 & 2.566 \\
+ \hline
+ 1 & 2 & 0.147 & 2.564 \\
+ \hline
+ 1.5 & 2 & 0.170 & 2.566 \\
+ \hline
+2 & 1 & 0.188 & 2.584 \\
+ \hline
+2.5 & 1 & 0.206 & 2.604 \\
+ \hline
+3 & 1 & 0.225 & 2.623 \\
+ \hline
+ 3.5 & 1 & 0.245 & 2.643 \\
+ \hline
+4 & 1 & 0.265 & 2.662 \\
+ \hline
+\end{tabular}
+\end{center}
+
+These results look weird because the test errors are so much higher than the validation errors. This is because there is a clear outlier data point in B that throws off the MSE.
+
+\begin{figure}[H]
+\centering
+        \begin{subfigure}[b]{0.4\textwidth}
+                \includegraphics[width=\linewidth]{../P3/figs/A_data.png}
+        \end{subfigure}%
+        \begin{subfigure}[b]{0.4\textwidth}
+                \includegraphics[width=\linewidth]{../P3/figs/B_data.png}
+        \end{subfigure}%
+  \caption*{Plotting all of the data points. The circled point is the outlier.}
+\end{figure}
+
+Two ways to deal with outliers include 1) upper-bounding errors incurred by single points, or 2) removing the points entirely. We experimented with removing the outlier point and ran our ridge regression again.
+
+\begin{center}
+ \begin{tabular}{||c c c c||} 
+ \hline
+ \multicolumn{4}{|c|}{Train on A, Test on Modified B} \\
+ \hline
+ \hline
+ $\lambda$ & Optimal M & Validation MSE & Test MSE\\ [0.5ex] 
+ \hline\hline
+ 0 & 2 & 0.107 & 0.06 \\ 
+ \hline
+ 0.5 & 2 & 0.126 & 0.08 \\
+ \hline
+ 1 & 2 & 0.147 & 0.106 \\
+ \hline
+ 1.5 & 2 & 0.170 & 0.133 \\
+ \hline
+2 & 1 & 0.188 & 0.158 \\
+ \hline
+2.5 & 1 & 0.206 & 0.183 \\
+ \hline
+3 & 1 & 0.225 & 0.209 \\
+ \hline
+ 3.5 & 1 & 0.245 & 0.235 \\
+ \hline
+4 & 1 & 0.265 & 0.262 \\
+ \hline
+\end{tabular}
+\quad
+ \begin{tabular}{||c c c c||} 
+ \hline
+ \multicolumn{4}{|c|}{Train on Modified B, Test on A} \\
+ \hline
+ \hline
+ $\lambda$ & Optimal M & Validation MSE & Test MSE\\ [0.5ex] 
+ \hline\hline
+ 0 & 3 & 0.089 & 0.193 \\ 
+ \hline
+ 0.5 & 4 & 0.091 & 0.084 \\
+ \hline
+ 1 & 1 & 0.125 & 0.079 \\
+ \hline
+ 1.5 & 1 & 0.132 & 0.077 \\
+ \hline
+2 & 1 & 0.144 & 0.078 \\
+ \hline
+2.5 & 1 & 0.159 & 0.084 \\
+ \hline
+3 & 1 & 0.177 & 0.092 \\
+ \hline
+ 3.5 & 1 & 0.197 & 0.102 \\
+ \hline
+4 & 1 & 0.218 & 0.115 \\
+ \hline
+\end{tabular}
+\end{center}
+
+We see some differences between the two test runs. When training on A and testing on B, the best model is quadratic, while it is linear when swapping the training and test sets. In both cases, though, the models that performed well had relatively low dimension, which makes sense given what the data looks like. Furthermore, setting $\lambda$ above 3 seemed too harsh of a regularization penalty. Ultimately, given the provided data sets, picking a linear or quadratic model with a small regularization penalty seems like the best bet.
+
+%Insert Table of errors with outlier
+%Talk about outlier
+%Run again without outlier
 
 \section{Sparsity and Lasso}
 
