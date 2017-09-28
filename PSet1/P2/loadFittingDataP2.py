@@ -309,7 +309,3 @@ def main():
 
 if __name__ == '__main__':
     main()
-
-# print(sum_sq_err(np.array([[1]])))
-# print(beta_closed_form(np.array([[1,6],[2,14],[4,20]]), \
-# np.array([[2],[4],[6]])))
