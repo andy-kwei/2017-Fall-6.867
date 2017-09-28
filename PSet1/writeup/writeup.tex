@@ -126,21 +126,21 @@ Often, when running gradient descent, it is computationally expensive to calcula
 Consider the basis function $$\Phi_M(x) = [\phi_0(x), \dots, \phi_M(x)],$$ where $\phi_k(x) = x^k$. Applying $\Phi_M$ to $\mathbf{X}$ gives the desired basis change, so we have the generalized linear model
 
 $$\mathbf Y = \Phi_M(\mathbf X) \cdot \bm \beta + \bm \epsilon,$$
-
-which has the close-form solution
+%
+which has the close-form solution,
 
 $$\hat{\bm \beta} = (\Phi_M(\mathbf X)^T \Phi_M(\mathbf X))^{-1} \Phi_M(\mathbf X)^T \mathbf Y,$$
-
+%
 where $\hat{\bm \beta}$ is the maximum-likelihood estimator of the regression coefficients.
 
-We ran regressions on the data using a few different degrees $(M = 0, 1, 3, 10)$.\footnotemark\ Below are plots of the resulting polynomial functions, compared to the given data and the true function:
+We fit polynomial regressions on the data via this method with a few different max degrees $(M = 0, 1, 3, 10)$.\footnotemark\ Below are plots of the resulting polynomial functions, compared to the original data and source function:
 
 \footnotetext{See the Appendix for the numerical values of the weights.}
 
 \begin{figure}[H]
   \centering
-  \includegraphics[width = 6.8in]{../P2/figs/part_1.png}
-  \caption{M-Degree Polynomial Fit (M = 0, 1, 3, 10)}
+  \includegraphics[width = 6.6in]{../P2/figs/part_1.png}
+  \caption{M-Degree Polynomial Fit}
 \end{figure}
 
 \subsection{Gradient Descent Solution with Polynomial Basis}

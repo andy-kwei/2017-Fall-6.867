@@ -118,11 +118,12 @@ def part_one(save=True, plot=True):
             plt.figure(1, figsize=(3*len(M), 3))
             plt.subplot(1, len(M), i+1)
             plt.plot(X, Y, 'ro', label='data')
-            plt.plot(x_values, y_values, label='reg fit')
+            plt.plot(x_values, y_values, label='poly fit')
             plt.plot(x_values, actual_y_values, label='source')
             plt.axis([0,1,-3,3])
             plt.gca().set_aspect(0.17, adjustable='box')
             plt.title('Polynomial Fit (M = '+str(m)+')')
+            plt.tight_layout()
             # plt.subplots_adjust(left=0.05, right=0.95, top=0.95, bottom=0.05)
 
             if i == 0:
@@ -271,7 +272,7 @@ def part_four(save=True, plot=True):
             plt.figure(4, figsize=(3 * len(M), 3))
             plt.subplot(1, len(M), i+1)
             plt.plot(X, Y, 'ro', label='data')
-            plt.plot(x_values, y_values, label='reg fit')
+            plt.plot(x_values, y_values, label='cos fit')
             plt.plot(x_values, actual_y_values, label='source')
             plt.axis([0,1,-3,3])
             plt.gca().set_aspect(0.17, adjustable='box')
@@ -316,19 +317,22 @@ def main():
     # start=None
     start=np.array([-2,10,-2,10]).reshape((-1,1))
 
-    part_three_bgd(eta=1e-4, start=start, M=M, threshold=t, plot_source=True)
-    part_three_bgd(eta=1e-3, start=start, M=M, threshold=t, plot_source=False)
-    part_three_bgd(eta=0.01, start=start, M=M, threshold=t, plot_source=False)
-    part_three_bgd(eta=0.05, start=start, M=M, threshold=t, plot_source=False)
+    part_one()
 
-    part_three_sgd(eta=0.001, start=start, M=M, threshold=t, plot_source=True)
-    part_three_sgd(eta=0.01, start=start, M=M, threshold=t, plot_source=False)
-    part_three_sgd(eta=0.1, start=start, M=M, threshold=t, plot_source=False)
-    part_three_sgd(eta=0.3, start=start, M=M, threshold=t, plot_source=False)
+    # part_three_bgd(eta=1e-4, start=start, M=M, threshold=t, plot_source=True)
+    # part_three_bgd(eta=1e-3, start=start, M=M, threshold=t, plot_source=False)
+    # part_three_bgd(eta=0.01, start=start, M=M, threshold=t, plot_source=False)
+    # part_three_bgd(eta=0.05, start=start, M=M, threshold=t, plot_source=False)
 
-    plt.figure(2).savefig('figs/part_3_bgd_etas.png')
-    plt.figure(3).savefig('figs/part_3_sgd_etas.png')
+    # part_three_sgd(eta=0.001, start=start, M=M, threshold=t, plot_source=True)
+    # part_three_sgd(eta=0.01, start=start, M=M, threshold=t, plot_source=False)
+    # part_three_sgd(eta=0.1, start=start, M=M, threshold=t, plot_source=False)
+    # part_three_sgd(eta=0.3, start=start, M=M, threshold=t, plot_source=False)
 
+    # plt.figure(2).savefig('figs/part_3_bgd_etas.png')
+    # plt.figure(3).savefig('figs/part_3_sgd_etas.png')
+
+    part_four()
     # generate_results()
     plt.show()
 
