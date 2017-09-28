@@ -117,6 +117,7 @@ if __name__ == '__main__':
     step_size = .01
     
     #### PLOTS HERE ####
+
     
     #Central Differences, Gauss
     numStepSizes = 4
@@ -135,7 +136,7 @@ if __name__ == '__main__':
     plt.legend()
     plt.xlabel('Distance from Critical Point')
     plt.ylabel('Norm of Difference From True Gradient')
-    plt.title('Central Difference Gradient Analysis (Gauss)')
+    plt.title('Central Difference Gradient Analysis (Gaussian)')
     plt.show()
     
     
@@ -145,7 +146,7 @@ if __name__ == '__main__':
     numDists = 20
     gradErrs = np.zeros((numStepSizes,numDists),dtype = np.matrix)
     for dist in range(1,numDists):
-        start = np.mat([[40/3.], [40/3.-dist]])
+        start = np.mat([[40/3.-dist], [20/3.-dist/10]])
         truthGrad=bowlGrad(start)
         for i in range(numStepSizes):
             approxFn = centralDifferences(bowl,stepSizes[i])
@@ -156,6 +157,8 @@ if __name__ == '__main__':
     plt.legend()
     plt.xlabel('Distance from Critical Point')
     plt.ylabel('Norm of Difference From True Gradient')
+    axes = plt.gca()
+    axes.set_ylim([-0.01,0.11])
     plt.title('Central Difference Gradient Analysis (Bowl)')
     plt.show()
     
@@ -169,7 +172,7 @@ if __name__ == '__main__':
     plt.plot(range(len(steps)),[i[2] for i in steps])
     plt.xlabel("Steps")
     plt.ylabel("Gradient Norm")
-    plt.title("Varying Convergence Threshold (Gauss)")
+    plt.title("Progression of Gradient Norm (Gaussian)")
     plt.show()
     
     #Norm of Gradient, bowl
@@ -179,10 +182,10 @@ if __name__ == '__main__':
     steps = []
     result = gradientDescent(bowlGrad, start, step_size, convergence_specs, steps)
     
-    plt.plot(range(len(steps)),[i[2] for i in steps])
+    plt.plot(range(len(steps)-1),[i[2] for i in steps[1:]])
     plt.xlabel("Steps")
     plt.ylabel("Gradient Norm")
-    plt.title("Varying Convergence Threshold (Gauss)")
+    plt.title("Progression of Gradient Norm (Bowl)")
     plt.show()
     
     
@@ -197,7 +200,7 @@ if __name__ == '__main__':
         result = gradientDescent(gaussGrad, start, step_size, convergence_specs, steps)
         stepsToConvergence[i] = len(steps)
     
-    plt.scatter(range(numDists),stepsToConvergence)
+    plt.scatter([i+1 for i in range(numDists-1)],stepsToConvergence[1:])
     plt.xlabel("Starting Distance From Critical Point")
     plt.ylabel("Number of Descent Steps to Convergence")
     plt.title("Varying Starting Point (Gaussian)")
@@ -213,7 +216,7 @@ if __name__ == '__main__':
         result = gradientDescent(bowlGrad, start, step_size, convergence_specs, steps)
         stepsToConvergence[i] = len(steps)
     
-    plt.scatter(range(numDists),stepsToConvergence)
+    plt.scatter([i+1 for i in range(numDists-1)],stepsToConvergence[1:])
     plt.xlabel("Starting Distance From Critical Point")
     plt.ylabel("Number of Descent Steps to Convergence")
     plt.title("Varying Starting Point (Bowl)")
@@ -221,7 +224,7 @@ if __name__ == '__main__':
     
     #Stepsize, Gauss
     convergence_specs = (gauss,1e-10,"objective")
-    numSteps = 6
+    numSteps = 5
     stepsToConvergence = [0]*numSteps
     start = np.mat([[10], [10-10]])
     stepSizes = [(i)/2+1. for i in range(numSteps)]
@@ -234,12 +237,12 @@ if __name__ == '__main__':
     plt.scatter(stepSizes,stepsToConvergence)
     plt.xlabel("-log(Step Size)")
     plt.ylabel("Number of Descent Steps to Convergence")
-    plt.title("Varying Step Size (Gauss)")
+    plt.title("Varying Step Size (Gaussian)")
     plt.show()
     
     #Stepsize, Bowl
     convergence_specs = (bowl,1e-10,"objective")
-    numSteps = 6
+    numSteps = 5
     stepsToConvergence = [0]*numSteps
     start = np.mat([[40./3], [40./3-10]])
     stepSizes = [(i)/2+1. for i in range(numSteps)]
@@ -259,7 +262,7 @@ if __name__ == '__main__':
     
     #Convergence Criteria, Gauss
     convergence_specs = (gauss,1e-10,"objective")
-    numSteps = 15
+    numSteps = 10
     stepsToConvergence = [0]*numSteps
     start = np.mat([[10], [10-10]])
     step_size = .01
@@ -273,12 +276,12 @@ if __name__ == '__main__':
     plt.scatter(range(numSteps),stepsToConvergence)
     plt.xlabel("-log(Convergence Threshold)")
     plt.ylabel("Number of Descent Steps to Convergence")
-    plt.title("Varying Convergence Threshold (Gauss)")
+    plt.title("Varying Convergence Threshold (Gaussian)")
     plt.show()
     
     #Convergence Criteria, Bowl
     convergence_specs = (bowl,1e-10,"objective")
-    numSteps = 15
+    numSteps = 10
     stepsToConvergence = [0]*numSteps
     start = np.mat([[40./3], [40./3-10]])
     step_size = .01
