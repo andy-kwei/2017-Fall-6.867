@@ -1,5 +1,5 @@
 import pylab as pl
-import P1.loadParametersP1 as lp1
+import loadParametersP1 as lp1
 import numpy as np
 import matplotlib.pyplot as plt
 from math import *
@@ -61,14 +61,14 @@ if __name__ == '__main__':
     
     rateFun = lambda iterations: 1e-4 * iterations ** -0.75
     steps = []
-    gradFun = stochGrad
+    gradFun = batchGrad
     convergence_specs = (value,1e-5,"objective")
     a = lp1.gradientDescent(gradFun, start, rateFun, convergence_specs, steps)
     plt.title("Stochastic gradient descent")
     plt.xlabel("Iterations")
     plt.ylabel("Log of gradient norm")
-    print(steps[0])
-    print(a)
-    print('err here')
+    # print(steps[0])
+    # print(a)
+    # print('err here')
     plt.plot([x for x, y,z in steps], [log(np.linalg.norm(gradFun(y))) for x, y,z in steps])
     plt.show()
