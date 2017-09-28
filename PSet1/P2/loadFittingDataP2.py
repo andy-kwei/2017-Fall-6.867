@@ -28,8 +28,6 @@ def getData(ifPlotData=True):
 
     return (X,Y)
 
-<<<<<<< HEAD
-=======
 def polynomial_basis(X, m):
     # X is a 1D array
     matrix = np.empty((len(X), m+1))
@@ -311,4 +309,3 @@ def main():
 
 if __name__ == '__main__':
     main()
->>>>>>> 3451ad320f9cfafa08f95d026e8fb3452002effa

@@ -31,7 +31,7 @@ def makeStochGrad(xs, ys):
 
 def makeValue(X, y):
     def value(theta):
-        return np.linalg.norm(X * theta - y)**2
+        return np.linalg.norm(X * theta - y)
     return value
 
 def getData():
@@ -49,6 +49,7 @@ if __name__ == '__main__':
     X, y = getData()
     xs = np.mat(X)
     ys = y
+    
     start = np.ones((10, 1))
 
     batchGrad = makeBatchGrad(xs, ys)
@@ -58,17 +59,16 @@ if __name__ == '__main__':
 
     # print(value(start))
     
-    rateFun = lambda iterations: ((1 + iterations) ** -0.8)*10**(-10)
+    rateFun = lambda iterations: 1e-4 * iterations ** -0.75
     steps = []
-    gradFun = stochGrad
+    gradFun = batchGrad
     convergence_specs = (value,1e-5,"objective")
     a = lp1.gradientDescent(gradFun, start, rateFun, convergence_specs, steps)
     plt.title("Stochastic gradient descent")
     plt.xlabel("Iterations")
-    plt.ylabel("Log of error")
-    print(steps[0])
-    print(a)
-    print('err here')
-    #plt.plot([x for x, y,z in steps], [log(np.linalg.norm(gradFun(y))) for x, y,z in steps])
-    plt.plot([x for x, y,z in steps[1:]], [log(abs(z)) for x, y,z in steps[1:]])
+    plt.ylabel("Log of gradient norm")
+    # print(steps[0])
+    # print(a)
+    # print('err here')
+    plt.plot([x for x, y,z in steps], [log(np.linalg.norm(gradFun(y))) for x, y,z in steps])
     plt.show()
