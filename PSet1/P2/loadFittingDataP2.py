@@ -11,6 +11,9 @@ from random import randint
 import loadParametersP1 as P1P
 import loadFittingDataP1 as P1F
 
+# This code is garbage
+# Need better ways of organizing plots next time
+
 def getData(ifPlotData=True):
     # load the fitting data and (optionally) plot out for examination
     # return the X and Y as a tuple
@@ -134,23 +137,28 @@ def part_one(save=True, plot=True):
 
     return solutions
 
-def part_two():
-    # test list can be expanded
+def part_two(beta=None, diff=1e-8):
+    if beta is None:
+        beta = np.zeros((1, 1))
+
+    M = beta.shape[0] - 1
     X, Y = getData(False)
-    X = X.reshape(-1, 1)
+    X = polynomial_basis(X, M).reshape(-1, M+1)
     Y = Y.reshape(-1, 1)
-    test = [np.array([11]).reshape(1,1)]
+
     stepSize = 1
+    sq_errs = []
 
-    for beta in test:
-        closed_form_grad = sse_gradient(X, Y, beta)
-        numerical_grad = P1P.centralDifferences(get_obj_func(X, Y), stepSize)(beta)
-        assert np.sum((closed_form_grad - numerical_grad)**2) < 1e-5
+    closed_form_grad = sse_gradient(X, Y, beta)
+    numerical_grad = P1P.centralDifferences(get_obj_func(X, Y), stepSize)(beta)
+    err = np.linalg.norm(closed_form_grad - numerical_grad)
+    assert err < diff
+    sq_errs.append(err)
 
-    return closed_form_grad, np.array(numerical_grad)
+    return closed_form_grad, np.array(numerical_grad), sq_errs
 
 def part_three_bgd(eta=1e-2, threshold=1e-8, start=None, M=[0,1,3,10], \
-                param=None, save=True, plot=True, plot_source=True):
+                    save=False, plot=True, plot_source=True):
     # bgd 
     # param = None, 'eta', 'epsilon'
     X, Y = getData(False)
@@ -177,9 +185,9 @@ def part_three_bgd(eta=1e-2, threshold=1e-8, start=None, M=[0,1,3,10], \
             x_values = np.linspace(0, 1, 100)
             y_values = eval_poly(x_values, beta)
             actual_y_values = eval_actual(x_values)
-
-            plt.figure(2, figsize=(3*len(M), 3))
-            plt.subplot(1, len(M), i+1)
+            
+            plt.figure(3, figsize=(12, 3))
+            plt.subplot(1, 5, i+1)
 
             if plot_source:
                 plt.plot(X, Y, 'ro', label='data')
@@ -201,7 +209,7 @@ def part_three_bgd(eta=1e-2, threshold=1e-8, start=None, M=[0,1,3,10], \
     return solutions
 
 def part_three_sgd(eta=1e-2, threshold=1e-8, start=None, M = [0,1,3,10],\
-                    save=True, plot=True, plot_source=True):
+                    save=False, plot=True, plot_source=True):
     # sgd 
     X, Y = getData(False)
     X = X.reshape(-1, 1)
@@ -228,8 +236,8 @@ def part_three_sgd(eta=1e-2, threshold=1e-8, start=None, M = [0,1,3,10],\
             y_values = eval_poly(x_values, beta)
             actual_y_values = eval_actual(x_values)
 
-            plt.figure(3, figsize=(3*len(M), 3))
-            plt.subplot(1, len(M), i+1)
+            plt.figure(3, figsize=(12, 3))
+            plt.subplot(1, 5, i+3)
 
             if plot_source:
                 plt.plot(X, Y, 'ro', label='data')
@@ -289,7 +297,7 @@ def part_four(save=True, plot=True):
     return solutions
 
 def generate_results(write_to_file=False, 
-                    save=[True, True, True],
+                    save=[True,True,True],
                     plot=[True,True,True]):
     try:
         if write_to_file:
@@ -312,28 +320,34 @@ def generate_results(write_to_file=False,
 
 def main():
     X, Y = getData(False)
-    M = [3]
-    t=1e-8
-    # start=None
-    start=np.array([-2,10,-2,10]).reshape((-1,1))
+    M = [2,6]
+    t=1e-20
+    start=None
+    # start=np.array([-2,10,-2,10]).reshape((-1,1))
 
-    part_one()
+    # p2_test_1 = np.array([100,2,4,5,6,2]).reshape(-1,1)
+    # p2_test_2 = np.array([0,2,20,34,-20,5,6,-398]).reshape(-1,1)
+    # part_one()
+    # print(part_two(p2_test_1))
+    # print(part_two(p2_test_2))
 
-    # part_three_bgd(eta=1e-4, start=start, M=M, threshold=t, plot_source=True)
+    part_three_bgd(eta=1e-4, start=start, M=M, threshold=t, plot_source=True)
     # part_three_bgd(eta=1e-3, start=start, M=M, threshold=t, plot_source=False)
-    # part_three_bgd(eta=0.01, start=start, M=M, threshold=t, plot_source=False)
+    part_three_bgd(eta=0.01, start=start, M=M, threshold=t, plot_source=True)
     # part_three_bgd(eta=0.05, start=start, M=M, threshold=t, plot_source=False)
 
-    # part_three_sgd(eta=0.001, start=start, M=M, threshold=t, plot_source=True)
+    # part_three_sgd(eta=0.002, start=start, M=M, threshold=t, plot_source=True)
     # part_three_sgd(eta=0.01, start=start, M=M, threshold=t, plot_source=False)
-    # part_three_sgd(eta=0.1, start=start, M=M, threshold=t, plot_source=False)
-    # part_three_sgd(eta=0.3, start=start, M=M, threshold=t, plot_source=False)
+    # part_three_sgd(eta=0.02, start=start, M=M, threshold=t, plot_source=False)
+    # part_three_sgd(eta=0.2, start=start, M=M, threshold=t, plot_source=False)
+
+    # plt.figure(900).savefig('figs/part_3_b_s.png')
 
     # plt.figure(2).savefig('figs/part_3_bgd_etas.png')
     # plt.figure(3).savefig('figs/part_3_sgd_etas.png')
 
-    part_four()
-    # generate_results()
+    # part_four()
+    # generate_results(save=[False,False,False], plot=[False,False,False])
     plt.show()
 
 
