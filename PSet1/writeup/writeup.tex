@@ -23,9 +23,9 @@
 \newcommand{\E}{{\mathbb E}}
 \mathchardef\hyphen="2D
 
-\title{\vspace{-5ex} 6.867 Homework 1}
+\title{\vspace{-6ex} 6.867 Homework 1}
 \author{}
-\date{\vspace{-9ex}}
+\date{\vspace{-10ex}}
 
 \begin{document}
 
@@ -240,49 +240,38 @@ We plot the MSE for different dimensionality models for different values of $\la
   \caption*{For $\lambda = 0$, increasing the dimensionality slowly improves the MSE. However, as $\lambda$ grows, the benefit shrinks because the regularization term punishes large terms in $\theta$.}
 \end{figure}
 %
-We then run our ridge regression on the provided datasets. For each value of $\lambda$, we run ridge regression for different values of M and pick the model with the best validation error. We then run that model on the test set and compute the MSE.
-%
-\begin{center}
- \begin{tabular}{||c c c c||} 
- \hline
- \multicolumn{4}{|c|}{Train on A, Test on B} \\
- \hline
- \hline
- $\lambda$ & Optimal M & Validation MSE & Test MSE\\ [0.5ex] 
- \hline\hline
- 0 & 2 & 0.107 & 2.575 \\ 
- \hline
- 0.5 & 2 & 0.126 & 2.566 \\
- \hline
- 1 & 2 & 0.147 & 2.564 \\
- \hline
- 1.5 & 2 & 0.170 & 2.566 \\
- \hline
-2 & 1 & 0.188 & 2.584 \\
- \hline
-2.5 & 1 & 0.206 & 2.604 \\
- \hline
-3 & 1 & 0.225 & 2.623 \\
- \hline
- 3.5 & 1 & 0.245 & 2.643 \\
- \hline
-4 & 1 & 0.265 & 2.662 \\
- \hline
-\end{tabular}
-\end{center}
-%
+We then run our ridge regression on the provided datasets. For each value of $\lambda$, we run ridge regression for different values of M and pick the model with the best validation error. We then run that model on the test set and compute the MSE. However, if we just run the training on A and validation on B, we get large MSEs for all values of $\lambda$ because there is one outlier point in data set B: (-2.60,3.46).
+% %
+% \begin{center}
+%  \begin{tabular}{||c c c c||} 
+%  \hline
+%  \multicolumn{4}{|c|}{Train on A, Test on B} \\
+%  \hline
+%  \hline
+%  $\lambda$ & Optimal M & Validation MSE & Test MSE\\ [0.5ex] 
+%  \hline\hline
+%  0 & 2 & 0.107 & 2.575 \\ 
+%  \hline
+%  0.5 & 2 & 0.126 & 2.566 \\
+%  \hline
+%  1 & 2 & 0.147 & 2.564 \\
+%  \hline
+%  1.5 & 2 & 0.170 & 2.566 \\
+%  \hline
+% 2 & 1 & 0.188 & 2.584 \\
+%  \hline
+% 2.5 & 1 & 0.206 & 2.604 \\
+%  \hline
+% 3 & 1 & 0.225 & 2.623 \\
+%  \hline
+%  3.5 & 1 & 0.245 & 2.643 \\
+%  \hline
+% 4 & 1 & 0.265 & 2.662 \\
+%  \hline
+% \end{tabular}
+% \end{center}
+% %
 These results look weird because the test errors are so much higher than the validation errors. This is because there is a clear outlier data point in B that throws off the MSE.
-
-\begin{figure}[H]
-\centering
-        \begin{subfigure}[b]{0.4\textwidth}
-                \includegraphics[width=\linewidth]{../P3/figs/A_data.png}
-        \end{subfigure}%
-        \begin{subfigure}[b]{0.4\textwidth}
-                \includegraphics[width=\linewidth]{../P3/figs/B_data.png}
-        \end{subfigure}%
-  \caption*{Plotting all of the data points. The circled point is the outlier.}
-\end{figure}
 
 Two ways to deal with outliers include 1) upper-bounding errors incurred by single points, or 2) removing the points entirely. We experimented with removing the outlier point and ran our ridge regression again.
 
@@ -354,17 +343,17 @@ We see some differences between the two test runs. When training on A and testin
 
 \section{Sparsity and Lasso}
 
-We use the $sklearn$ package in Python to run lasso regression. We run lasso on the training set with different values for the parameter $\lambda$. Next, we test the trained models on the validation set, and find that the model trained with parameter $\lambda = 9.4 \cdot 10^{-4}$ gives the least square loss in the validation set. In particular, we observe that for sufficiently large $\lambda$ $\approx 10^{-3}$, we start to get sparse solutions from lasso, with nonzero coefficients in the second, third, fifth, and sixth terms (which matches those of the true weight vector). Lastly, we test the resulting weights in the test data to check if we overfit.
+We use the $sklearn$ package in Python to run lasso regression. We run lasso on the training set with different values for the parameter $\lambda$. Next, we test the trained models on the validation set, and find that the model trained with parameter $\lambda = 9.4 \cdot 10^{-4}$ gives the least square loss in the validation set. We observe that for sufficiently large $\lambda$ $\approx 10^{-3}$, we start to get sparse solutions from lasso, with nonzero coefficients in the second, third, fifth, and sixth terms (which matches those of the true weight vector). Lastly, we find the residual of sum of squares of estimated weights in the test data to check if we overfit.
 
-% (0.46, 0.85) (0.51, 0.74)
+We run the same procedure with ridge regression. In comparison, ridge regression does not give a sparse representation, as all thirteen weights are nonzero.
 
-In comparison, ridge regression does not give a sparse representation.
+We have residual sum of squares $(RSS_{val}, RSS_{test}) = (0.51, 0.74)$ for lasso, and $(RSS_{val}, RSS_{test}) = (0.46, 0.85)$ for ridge regression. Both lasso and ridge regression performed very well in fitting the data, with slightly more overfitting in ridge regression than in lasso (as seen from the larger test error). It is not surprsing that lasso performed better, as the true function only has four parameters as well.
 
-See plot below for comparison with ridge regression, ordinary regression with linear basis, and the true function.
+See plot below for comparison of lasso, ridge regression, ordinary least squares with basis change, and the true function:
 
 \begin{figure}[H]
   \centering
-  \includegraphics[width = 3in]{../P4/figs/lasso_ridge.png}
+  \includegraphics[width = 3.3in]{../P4/figs/lasso_ridge.png}
   \caption{Lasso vs. Ridge regression}
 \end{figure}
 

@@ -148,7 +148,7 @@ def main():
     ridge_y_values = eval_basis(x_values, ridge_beta)
     ols_y_values = eval_basis(x_values, ols_beta)
 
-    plt.figure(1, figsize=(8, 5))
+    plt.figure(1, figsize=(8, 4))
     # plt.subplot(1, len(M), i+1)
     # plt.plot(X, Y, 'ro', label='data')
     plt.plot(x_values, lasso_y_values, label='lasso')
