@@ -1,0 +1,44 @@
+Problem 1 (LR):
+part 1.
+reg = L2, lambda = 1
+params: [ 0.880137303965 -0.124803150057 2.93467564858]
+
+reg = None, lambda = 0
+params: [ 1.79173453571 -4.00710940609 29.188113242]
+
+
+part 2.
+reg = L2, lambda = 1
+params: [ 1.13829764 -0.18293729 3.36791697]
+
+reg = L1, lambda = 1
+params: [ 1.49701637 -0.18975368 4.37243294]
+
+
+part 3.
+description: (data1, L1 reg, λ = 1.0)
+params: [ 1.497 -0.189  4.369]
+training accuracy: 100.00%
+validation accuracy: 100.00%
+test accuracy: 100.00%
+
+
+description: (data2, L1 reg, λ = 1.0)
+params: [ 0.157  1.787  0.   ]
+training accuracy: 83.25%
+validation accuracy: 82.50%
+test accuracy: 80.50%
+
+
+description: (data3, L1 reg, λ = 0.25)
+params: [ -5.064  -0.348  10.953]
+training accuracy: 98.75%
+validation accuracy: 97.00%
+test accuracy: 95.50%
+
+
+description: (data4, L1 reg, λ = 1.0)
+params: [ 0.    -0.023 -0.022]
+training accuracy: 51.75%
+validation accuracy: 49.75%
+test accuracy: 50.00%

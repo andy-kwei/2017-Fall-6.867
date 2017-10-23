@@ -99,7 +99,7 @@ def getData():
 
     quadBowlA = data[3:5,:]
     quadBowlb = data[5,:]
-
+    
     return (gaussMean,gaussCov,quadBowlA,quadBowlb) 
 
 
