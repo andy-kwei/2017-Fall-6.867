@@ -1,4 +1,6 @@
+------------------------
 Problem 1 (LR):
+------------------------
 part 1.
 reg = L2, lambda = 1
 params: [ 0.880137303965 -0.124803150057 2.93467564858]
@@ -6,7 +8,7 @@ params: [ 0.880137303965 -0.124803150057 2.93467564858]
 reg = None, lambda = 0
 params: [ 1.79173453571 -4.00710940609 29.188113242]
 
-
+------------------------
 part 2.
 reg = L2, lambda = 1
 params: [ 1.13829764 -0.18293729 3.36791697]
@@ -14,7 +16,7 @@ params: [ 1.13829764 -0.18293729 3.36791697]
 reg = L1, lambda = 1
 params: [ 1.49701637 -0.18975368 4.37243294]
 
-
+------------------------
 part 3.
 description: (data1, L1 reg, λ = 1.0)
 params: [ 1.497 -0.189  4.369]
@@ -22,13 +24,11 @@ training accuracy: 100.00%
 validation accuracy: 100.00%
 test accuracy: 100.00%
 
-
 description: (data2, L1 reg, λ = 1.0)
 params: [ 0.157  1.787  0.   ]
 training accuracy: 83.25%
 validation accuracy: 82.50%
 test accuracy: 80.50%
-
 
 description: (data3, L1 reg, λ = 0.25)
 params: [ -5.064  -0.348  10.953]
@@ -36,9 +36,196 @@ training accuracy: 98.75%
 validation accuracy: 97.00%
 test accuracy: 95.50%
 
-
 description: (data4, L1 reg, λ = 1.0)
 params: [ 0.    -0.023 -0.022]
 training accuracy: 51.75%
 validation accuracy: 49.75%
 test accuracy: 50.00%
+
+-------------------------------
+Problem 2 (SVM):
+-------------------------------
+part 1.
+Quadratic Program: #TODO
+Part 1: C-SVM (C = 1.0)
+Params: [[ 0.30769231  0.46153846]]
+Support vectors: [[ 0. -1.]
+ [ 2.  2.]]
+
+-------------------------------
+part 2.
+data_set: data1
+params: [[-0.183  1.761]]
+train_acc: 100.00%
+val_acc: 100.00%
+
+data_set: data2
+params: [[ 1.314 -0.042]]
+train_acc: 82.25%
+val_acc: 82.00%
+
+data_set: data3
+params: [[-0.048  3.433]]
+train_acc: 98.00%
+val_acc: 97.50%
+
+data_set: data4
+params: [[-0.219 -0.211]]
+train_acc: 70.00%
+val_acc: 69.50%
+
+------------------------------
+part 3.
+data_set = data2
+des: Linear SVM (C = 0.01)
+support vectors: 252
+margin: 1.245
+train_acc: 82.0%
+val_acc: 82.5%
+
+des: Linear SVM (C = 0.1)
+support vectors: 186
+margin: 0.847
+train_acc: 82.5%
+val_acc: 82.5%
+
+des: Linear SVM (C = 1)
+support vectors: 173
+margin: 0.760
+train_acc: 82.2%
+val_acc: 82.0%
+
+des: Linear SVM (C = 10)
+support vectors: 171
+margin: 0.725
+train_acc: 82.5%
+val_acc: 82.5%
+
+des: Linear SVM (C = 100)
+support vectors: 171
+margin: 0.725
+train_acc: 82.5%
+val_acc: 82.5%
+
+
+----------------------------
+Problem 3 (Pegasos)
+----------------------------
+part 1.
+des: pegasos data3_train (λ = 0.01)
+params: w_0, w w_0, w = -0.693, -0.160, 2.286
+train_acc: 98.0%
+val_acc: 97.0%
+
+----------------------------
+part 2.
+lambda = 2.0e+00
+margin = 2.144
+
+lambda = 1.0e+00
+margin = 1.414
+
+lambda = 5.0e-01
+margin = 1.138
+
+lambda = 2.5e-01
+margin = 0.932
+
+lambda = 1.2e-01
+margin = 0.779
+
+lambda = 6.2e-02
+margin = 0.663
+
+lambda = 3.1e-02
+margin = 0.551
+
+lambda = 1.6e-02
+margin = 0.451
+
+lambda = 7.8e-03
+margin = 0.400
+
+lambda = 3.9e-03
+margin = 0.314
+
+lambda = 2.0e-03
+margin = 0.248
+
+lambda = 9.8e-04
+margin = 0.202
+
+---------------------------
+part 3.
+Compute sum_i alpha_i * k(x_i, x).
+
+---------------------------
+part 4.
+gamma = 4
+support vectors: 57
+train_acc: 98.8%
+val_acc: 96.5%
+
+gamma = 2
+support vectors: 37
+train_acc: 99.0%
+val_acc: 97.0%
+
+gamma = 1
+support vectors: 27
+train_acc: 97.8%
+val_acc: 97.0%
+
+gamma = 0.5
+support vectors: 30
+train_acc: 97.0%
+val_acc: 96.5%
+
+gamma = 0.25
+support vectors: 30
+train_acc: 96.8%
+val_acc: 94.5%
+
+-------------------------------
+Problem 4 (MNIST)
+-------------------------------
+Overview:
+Logistic Regression
+L1 reg (λ* = 2.44e-04)
+train_acc: 100.0%
+val_acc: 99.0%
+test_acc: 99.0%
+
+QP Linear SVM
+C* = 1.95e-03
+train_acc: 99.8%
+val_acc: 99.0%
+test_acc: 98.7%
+
+QP Gaussian RBF SVM
+C*, γ* = 1.00e+00, 1.00e-02
+train_acc: 100.0%
+val_acc: 99.0%
+test_acc: 99.0%
+
+Pegasos Linear SVM
+λ* = 1.25e-01
+train_acc: 100.0%
+val_acc: 99.0%
+test_acc: 99.0%
+
+Pegasos Gaussian RBF SVM
+λ*, γ* = 2.00e-02, 2.00e-01
+train_acc: 100.0%
+val_acc: 99.0%
+test_acc: 99.0%
+
+
+part 1. Similar performance. Normalization does not matter.
+
+part 2. Very slight improvement.
+Normalization matters for rbf; without normalization, accuracy drops to
+(1.0, 0.596, 0.593)
+
+part 3. Similar accuracies:
+Pegasos a lot faster than QP. Based on stochastic gradient descent. Has nice convergence bounds.

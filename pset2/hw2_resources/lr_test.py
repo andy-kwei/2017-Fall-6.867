@@ -80,7 +80,7 @@ def model_sweep(plot=False):
                 X_test = test[:,0:2]
                 Y_test = test[:,2:3]                
 
-                params = lr.sktrain(X, Y.flatten(), reg='l1', alpha=alpha)
+                params = lr.lr_train(X, Y.flatten(), reg='l1', alpha=alpha)
 
                 tag = '(data{name}, {reg} reg, λ = {alpha})'.format(name=name, reg=reg.upper(), alpha=alpha)
                 np.set_printoptions(precision=3)
