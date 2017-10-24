@@ -17,9 +17,6 @@ class TestGD:
         np.testing.assert_almost_equal(gd.sgd(grad_gen, x), 0)
 
 def main():
-    t = TestGD()
-    t.test_batch()
-    t.test_sgd()
     print("Success!")
 
 if __name__ == '__main__':
