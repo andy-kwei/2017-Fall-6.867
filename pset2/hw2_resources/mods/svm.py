@@ -4,11 +4,35 @@ sys.path.append('..')
 import numpy as np
 import pylab as pl
 from sklearn.svm import SVC
+import cvxopt as cvx
 from loadData import *
 from plotBoundary import *
 
 cmaps = [pl.cm.cool, pl.cm.bwr, pl.cm.coolwarm, pl.cm.winter]
 colors = ['navy', 'blue', 'black', 'orange', 'turquoise', 'grey']
+
+def qp_dual(X, Y, C=1.0, kernel='linear', gamma=None):
+    q = cvx.matrix(np.ones((len(X), 1)))
+    G = cvx.matrix(np.concatenate(np.ones((len(X), 1)), np.ones((len(X), 1)) * -1))
+    h = cvx.matrix(np.concatenate(np.ones((len(X), 1)) * C, np.zeros((len(X), 1))))
+    A = cvx.matrix(Y.reshape((1, -1)))
+    b = cvx.matrix(np.zeros((len(X), 1)))
+
+    D = np.zeros((len(X), len(X)))
+    for i in range(len(X)):
+        if kernel == 'linear':
+            D[i][i] = -1./2 * X[i] @ X[i].reshape(-1,1) 
+        elif kernel == 'rbf':
+            D[i][i] = -1./2 
+    P = cvx.matrix(D)
+
+    return P, q, G, h, A, b
+
+def qp_train(X, Y, C=1.0, kernel='linear', gamma=None):
+    args = qp_dual(X, Y, C, kernel, gamma)
+    solution = cvx.solvers.qp(*args)
+    alpha = np.array(solution['x'])
+    return alpha
 
 def svm_train(X, Y, C=1.0, kernel='linear', gamma='auto'):
     svm = SVC(C=C, kernel=kernel, gamma=gamma)
