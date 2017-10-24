@@ -18,9 +18,10 @@ def load_test(index):
     Y = data[:, 2:3].copy()
     return X, Y
 
-def load_mnist(digit):
+def load_mnist(digit, norm=True):
     X = np.loadtxt('../data/mnist_digit_'+str(digit)+'.csv')
-    X = 2. * X / 255 - np.ones_like(X)
+    if norm:
+        X = 2. * X / 255 - np.ones_like(X)
     X_train = X[:200, :]
     X_val = X[200:350, :]
     X_test = X[350:500, :]

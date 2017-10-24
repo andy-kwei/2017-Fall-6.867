@@ -1,17 +1,32 @@
 import numpy as np
 from sklearn.linear_model import LogisticRegression
-from . import gradientDescent as gd
+import gradientDescent as gd
 
-def sktrain(X, Y, reg='l2', alpha=1.):
-    lr = LogisticRegression(penalty=reg, C=1./alpha)
-    lr.fit(X, Y)
+def lr_train(X, Y, reg='l2', lmbd=1.):
+    lr = LogisticRegression(penalty=reg, C=1./lmbd)
+    lr.fit(X, Y.flatten())
     return np.concatenate((lr.intercept_, lr.coef_.reshape(-1,)))
 
-def train(X, Y, reg='l2', alpha=1., eta=1., epsilon=1e-8, max_iters=1e4, gd_method='batch'):
-    obj = logistic_loss_fn(X, Y, reg=reg, alpha=alpha)
+def acc(X, Y, params):
+    errors = 0
+    for i in range(X.shape[0]):
+        if lr_score(X[i], params) > 0.5:
+            errors += (1 - Y[i].item()) / 2
+        else:
+            errors += (1 + Y[i].item()) / 2
+    return 1-errors/X.shape[0]
+
+def lr_score(x, params):
+    x.shape = (-1,)
+    x_one = np.concatenate((np.array([1]), x))
+    z = (x_one @ params).item()
+    return 1. / (1 + np.exp(-z))
+
+def train(X, Y, reg='l2', lmbd=1., eta=1., epsilon=1e-8, max_iters=1e4, gd_method='batch'):
+    obj = logistic_loss_fn(X, Y, reg=reg, lmbd=lmbd)
     grad = gd.num_grad_fn(obj)
     grad_gen = lambda i: (lambda w: gd.num_grad_fn(
-        logistic_loss_fn(X, Y, reg=reg, alpha=alpha, index=i))(w))
+        logistic_loss_fn(X, Y, reg=reg, lmbd=lmbd, index=i))(w))
     start = np.ones((X.shape[1]+1, 1))
 
     if isinstance(eta, float):
@@ -27,13 +42,13 @@ def train(X, Y, reg='l2', alpha=1., eta=1., epsilon=1e-8, max_iters=1e4, gd_meth
         sol = None
     return sol
 
-def logistic_loss_fn(X, Y, reg='l2', alpha=1., index=None):
+def logistic_loss_fn(X, Y, reg='l2', lmbd=1., index=None):
     def L(weights):
         loss = 0
         if reg == 'l2':
-            loss += alpha * (weights.T @ weights).item()
+            loss += lmbd * (weights.T @ weights).item()
         elif reg == 'l1':
-            loss += alpha * sum(abs(weights))
+            loss += lmbd * sum(abs(weights))
 
         w_0 = weights[:1,:].item()
         w = weights[1:,:]
